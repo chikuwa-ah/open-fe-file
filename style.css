@@ -62,3 +62,23 @@ a:hover {
 .sub {
     display: flex;
 }
+
+.info {
+    display: flex;
+}
+
+.index {
+    text-align: right;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    border-right: solid black;
+}
+
+.dis {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
