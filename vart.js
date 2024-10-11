@@ -5,6 +5,7 @@ function arrayCSV(str) {
         result[i] = tmp[i].split(',');
     };
     result.pop();
+    document.getElementById('date').textContent = `実施日：${result[1][7]}`;
     displayCSV();
 };
 
