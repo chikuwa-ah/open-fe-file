@@ -1,20 +1,10 @@
-function getCSV() {
-    let req = new XMLHttpRequest();
-    req.open('get', './file/000.csv', true);
-    req.send(null);
-
-    req.onload = function () {
-        arrayCSV(req.responseText);
-    }
-}
-
 let result = [];
 function arrayCSV(str) {
     let tmp = str.split('\n');
     for (let i = 0; i < tmp.length; i++) {
         result[i] = tmp[i].split(',');
     };
-
+    result.pop();
     displayCSV();
 };
 
@@ -78,7 +68,6 @@ const displayCSV = () => {
             classScore[cl]++;
         };
     };
-    console.log(classSum);
 
     const rate = correct / (result.length - 1);
     const percent = Math.round(rate * 10000) / 100;
@@ -140,23 +129,37 @@ const removeElement = () => {
 
 document.getElementById('out').addEventListener('click', (e) => {
     const id = Number(e.target.id);
-    if (isNaN(id)) {
-        console.log('?');
+    if (isNaN(id) || id === 0) {
         return;
     };
-    if (id === 3) {
+    if (id === 4) {
         removeElement();
         displayCSV();
         return;
     };
-    console.log(id);
     const ofClass = {
-        num: id + 1,
+        num: id,
         text: e.target.textContent
     };
-    console.log(ofClass);
     removeElement();
     displaySelect(ofClass);
 });
 
-getCSV();
+document.getElementById('inputFile').addEventListener('change', (e) => {
+    document.getElementById('origin').style.display = 'flex';
+
+    const result = e.target.files[0];
+    const reader = new FileReader();
+    reader.readAsArrayBuffer(result);
+    reader.addEventListener('load', () => {
+        removeElement();
+        const arrayBuffer = reader.result;
+        const decoder = new TextDecoder('shift-jis');
+        const decodedText = decoder.decode(arrayBuffer);
+        arrayCSV(decodedText);
+    });
+});
+
+window.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('origin').style.display = 'none';
+});
