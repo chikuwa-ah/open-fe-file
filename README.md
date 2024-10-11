@@ -1,2 +1,2 @@
 # open FE file
-<https://chikuwa-ah.github.io/readCSV/>
+<https://chikuwa-ah.github.io/open-fe-file/>
