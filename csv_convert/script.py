@@ -4,7 +4,7 @@ import glob
 
 def main():
     # Shift_JIS ファイルのパス
-    shiftjis_csv_path = './0.csv'
+    shiftjis_csv_path = './01.csv'
     # UTF-8 ファイルのパス
     utf8_csv_path = 'utf8_data.csv'
 
