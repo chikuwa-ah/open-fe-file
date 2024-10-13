@@ -85,3 +85,26 @@ a:hover {
     padding-top: 3px;
     padding-bottom: 3px;
 }
+
+.svg-fe {
+    animation: svg 5s ease-in both;
+    fill: #00a074;
+    stroke: #007059;
+}
+
+@keyframes svg {
+    0% {
+        fill: transparent;
+        stroke-dasharray: 2000px;
+        stroke-dashoffset: 2000px;
+    }
+
+    80% {
+        stroke-dashoffset: 0;
+        fill: transparent;
+    }
+}
+
+.header {
+    display: flex;
+}
