@@ -1,10 +1,13 @@
-let result = [];
+let result = [], lineArr = [];
 function arrayCSV(str) {
     let tmp = str.split('\n');
     for (let i = 0; i < tmp.length; i++) {
         result[i] = tmp[i].split(',');
     };
     result.pop();
+    for (let i = 0; i < result.length; i++) {
+        result[i][8] = false;
+    };
     document.getElementById('date').textContent = `実施日：${result[1][7]}`;
     displayCSV();
 };
@@ -41,10 +44,28 @@ const splitLink = (parent, text) => {
         newText.textContent = 'LINK';
         newText.href = link[3];
         newText.target = '_blank';
+        newText.setAttribute('onclick', 'linkClick(this);');
     } else {
         newText.textContent = '出典';
     };
     newChild.appendChild(newText);
+};
+
+const checkBoxAdd = (parent, num) => {
+    const newChild = document.createElement('div');
+    newChild.classList.add('checkBox');
+    parent.appendChild(newChild);
+    if (num === 0) {
+        newChild.id = 'allClear';
+        newChild.textContent = '済';
+    } else {
+        const newCheck = document.createElement('div');
+        newCheck.id = 'mark';
+        newChild.appendChild(newCheck);
+        if (result[num][8]) {
+            newCheck.style.display = 'block';
+        };
+    };
 };
 
 const displayCSV = () => {
@@ -59,9 +80,14 @@ const displayCSV = () => {
             correct += authenticity ? 1 : 0;
         };
     };
+    const check = document.getElementById('check');
+    lineArr = [];
     for (let i = 0; i < result.length; i++) {
         splitLink(originChilds[5], result[i][5]);
+        checkBoxAdd(check, i);
+        lineArr.push(i);
     };
+
     for (let i = 1; i < result.length; i++) {
         const cl = classifcation.indexOf(result[i][2]);
         classSum[cl]++;
@@ -88,7 +114,7 @@ const displayCSV = () => {
 const displaySelect = (select) => {
     const origin = document.getElementById('origin');
     const originChilds = origin.children;
-    const lineArr = [0];
+    lineArr = [0];
     let correct = 0;
     for (let i = 1; i < result.length; i++) {
         if (result[i][select.num] === select.text) {
@@ -102,8 +128,10 @@ const displaySelect = (select) => {
             correct += authenticity ? 1 : 0;
         };
     };
+    const check = document.getElementById('check');
     for (let i = 0; i < lineArr.length; i++) {
         splitLink(originChilds[5], result[lineArr[i]][5]);
+        checkBoxAdd(check, lineArr[i]);
     };
 
     const rate = correct / (lineArr.length - 1);
@@ -121,7 +149,7 @@ const displaySelect = (select) => {
 const removeElement = () => {
     const origin = document.getElementById('origin');
     const originChilds = origin.children;
-    for (let r = 0; r < 6; r++) {
+    for (let r = 0; r < 8; r++) {
         while (originChilds[r].firstChild) {
             originChilds[r].removeChild(originChilds[r].firstChild);
         };
@@ -142,8 +170,63 @@ document.getElementById('out').addEventListener('click', (e) => {
         num: id,
         text: e.target.textContent
     };
+    selectFlag = true;
     removeElement();
     displaySelect(ofClass);
+});
+
+const checkBoxStyle = (index) => {
+    const element = document.getElementById('check');
+    const box = element.children[index];
+    const children = box.children[0];
+    if (result[lineArr[index]][8]) {
+        children.style.display = 'none';
+        result[lineArr[index]][8] = false;
+    } else {
+        children.style.display = 'block';
+        result[lineArr[index]][8] = true;
+    };
+};
+
+const linkClick = (element) => {
+    const parent = element.parentNode.closest('.parent');
+    const children = Array.from(parent.children);
+    const div = element.parentNode;
+    const index = children.indexOf(div);
+
+    const check_element = document.getElementById('check');
+    const check_box = check_element.children[index];
+    const check_children = check_box.children[0];
+    check_children.style.display = 'block';
+    result[lineArr[index]][8] = true;
+};
+
+document.getElementById('check').addEventListener('click', (e) => {
+    const clickedElement = e.target;
+    const parent = clickedElement.parentNode;
+    const children = Array.from(parent.children);
+    let index = children.indexOf(clickedElement);
+
+    if (index != 0) {
+        checkBoxStyle(index);
+    } else {
+        const closestParent = clickedElement.closest('.checkBox');
+        if (closestParent) {
+            const parentChildren = Array.from(closestParent.parentNode.children);
+            index = parentChildren.indexOf(closestParent);
+            if (index != 0) {
+                checkBoxStyle(index);
+            } else {
+                for (let i = 1; i < result.length; i++) {
+                    result[i][8] = false;
+                    const check_element = document.getElementById('check');
+                    const check_box = check_element.children[i];
+                    const check_children = check_box.children[0];
+                    check_children.style.display = 'none';
+                };
+            };
+        };
+    };
 });
 
 document.getElementById('inputFile').addEventListener('change', (e) => {
