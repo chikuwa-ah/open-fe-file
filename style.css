@@ -27,6 +27,14 @@ a:hover {
     color: #0000007e;
 }
 
+.check>* {
+    transition: .3s;
+}
+
+.check>*:hover {
+    opacity: 0.5;
+}
+
 .origin {
     font-size: 12px;
     font-weight: 900;

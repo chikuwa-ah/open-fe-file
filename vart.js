@@ -207,24 +207,23 @@ document.getElementById('check').addEventListener('click', (e) => {
     const children = Array.from(parent.children);
     let index = children.indexOf(clickedElement);
 
-    if (index != 0) {
+    const closestParent = clickedElement.closest('.checkBox');
+
+    if (index !== 0) {
         checkBoxStyle(index);
-    } else {
-        const closestParent = clickedElement.closest('.checkBox');
-        if (closestParent) {
-            const parentChildren = Array.from(closestParent.parentNode.children);
-            index = parentChildren.indexOf(closestParent);
-            if (index != 0) {
-                checkBoxStyle(index);
-            } else {
-                for (let i = 1; i < result.length; i++) {
-                    result[i][8] = false;
-                    const check_element = document.getElementById('check');
-                    const check_box = check_element.children[i];
-                    const check_children = check_box.children[0];
-                    check_children.style.display = 'none';
-                };
-            };
+    } else if (closestParent) {
+        const parentChildren = Array.from(closestParent.parentNode.children);
+        index = parentChildren.indexOf(closestParent);
+
+        if (index !== 0) {
+            checkBoxStyle(index);
+        } else {
+            result.slice(1).forEach((item, i) => {
+                item[8] = false;
+                const checkBox = document.getElementById('check').children[i + 1];
+                const checkChildren = checkBox.children[0];
+                checkChildren.style.display = 'none';
+            });
         };
     };
 });
